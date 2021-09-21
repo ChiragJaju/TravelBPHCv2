@@ -178,7 +178,16 @@ router.get("/userInfo/:ID", async (req, res) => {
     res.status(500).send();
   }
 });
-
+router.get("/deletepost/:ID", async (req, res) => {
+  try {
+    const id = req.params.ID;
+    await posts.findByIdAndDelete(id);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(false);
+  }
+});
 router.post("/posts/request/:ID", async (req, res) => {
   try {
     const name = req.body.Rname;
@@ -194,7 +203,7 @@ router.post("/posts/request/:ID", async (req, res) => {
       res.send(false);
     } else {
       const updatedPost = await posts.findByIdAndUpdate(req.params.ID, {
-        Preq: [{ name: name, email: email }, ...preq],
+        Preq: [{ name: name, email: email, status: undefined }, ...preq],
       });
       if (updatedPost) res.send(true);
     }
@@ -203,11 +212,43 @@ router.post("/posts/request/:ID", async (req, res) => {
     res.status(500).send(false);
   }
 });
-router.get("/deletepost/:ID", async (req, res) => {
+
+router.post("/postRequest/:response/:email", async (req, res) => {
   try {
-    const id = req.params.ID;
-    await posts.findByIdAndDelete(id);
-    res.sendStatus(200);
+    // console.log(req.body.Preq);
+    // console.log(req.params.email);
+    // console.log(req.body.Preq);
+    await req.body.Preq.map((request) => {
+      if (request.email === req.params.email) {
+        request.status = req.params.response;
+        // console.log(request.status);
+      }
+    });
+    // console.log(req.body.Preq);
+    const updatedReq = await posts.findByIdAndUpdate(req.body._id, {
+      Preq: req.body.Preq,
+    });
+    const response = req.params.response;
+    // console.log(response);
+    const existingUser = await user.findOne({ email: req.params.email });
+    // console.log(existingUser);
+    // console.log(existingUser._id.toString());
+    const oldRequestsMade = existingUser.requestsMade;
+    const oldPostToShow = existingUser.postToShow;
+    const updatedPost = await user.findByIdAndUpdate(
+      existingUser._id.toString(),
+      {
+        requestsMade: [
+          { postId: req.body._id, requestStatus: response },
+          ...oldRequestsMade,
+        ],
+        postToShow: [
+          { postId: req.body._id, requestStatus: response },
+          ...oldPostToShow,
+        ],
+      }
+    );
+    if (updatedPost) res.send(true);
   } catch (err) {
     console.error(err);
     res.status(500).send(false);

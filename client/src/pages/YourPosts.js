@@ -36,7 +36,7 @@ export default function YourPosts() {
       {yourPosts.map((post) => {
         return (
           <>
-            <YourCustomCard post={post}></YourCustomCard>
+            <YourCustomCard post={post} current={true}></YourCustomCard>
           </>
         );
       })}
@@ -51,7 +51,7 @@ export default function YourPosts() {
       {pastPosts.map((post) => {
         return (
           <>
-            <YourCustomCard post={post}></YourCustomCard>
+            <YourCustomCard post={post} current={false}></YourCustomCard>
           </>
         );
       })}

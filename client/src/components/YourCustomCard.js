@@ -23,10 +23,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function YourCustomCard(props) {
   const classes = useStyles();
+
   let dateData = props.post.PdateAndTime;
-  const handleClick = async () => {
+  const handleClickDelete = async () => {
     await axios.get("/api/deletepost/" + props.post._id);
   };
+
   return (
     <Card variant="outlined" className={classes.card}>
       <Grid
@@ -91,7 +93,12 @@ export default function YourCustomCard(props) {
         {props.post.Preq.map((req) => {
           return (
             <Grid item xs={12}>
-              <RequestText req={req}></RequestText>
+              <RequestText
+                current={props.current}
+                req={req}
+                postId={props.post._id}
+                postDetails={props.post}
+              ></RequestText>
             </Grid>
           );
         })}
@@ -101,7 +108,7 @@ export default function YourCustomCard(props) {
             color: "#e0e0e0",
             marginTop: "20px",
           }}
-          onClick={handleClick}
+          onClick={handleClickDelete}
         >
           <i class="fas fa-trash-alt"></i>
         </Button>

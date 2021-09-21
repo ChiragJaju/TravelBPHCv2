@@ -20,6 +20,7 @@ var Posts = new Schema({
     {
       name: String,
       email: String,
+      status: String,
     },
   ],
 });
