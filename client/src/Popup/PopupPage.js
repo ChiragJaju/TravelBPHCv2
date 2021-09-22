@@ -5,10 +5,10 @@ import AuthContext from "../context/AuthContext";
 import axios from "axios";
 
 const PopupPage = (props) => {
-  const { userID, userInfo, notes } = useContext(AuthContext);
+  const { userID, notes } = useContext(AuthContext);
   const [userDetails, setUserDetails] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [postsToSend, setPostsToSend] = useState();
+
   const handleOkay = () => {
     props.onHidePopup();
   };

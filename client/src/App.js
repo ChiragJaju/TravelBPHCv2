@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Login from "./pages/Login";
 import AuthContext from "./context/AuthContext";
@@ -9,7 +9,6 @@ import axios from "axios";
 import YourPosts from "./pages/YourPosts";
 import Navbar from "./pages/Navbar";
 import Filter from "./pages/Filter";
-import PopupPage from "./Popup/PopupPage";
 
 axios.defaults.withCredentials = true;
 
