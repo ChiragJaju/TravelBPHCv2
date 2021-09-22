@@ -170,7 +170,6 @@ router.get("/loggedIn", async (req, res) => {
 
 router.get("/userInfo/:ID", async (req, res) => {
   try {
-    // console.log(req.params.ID);
     const existingUser = await user.findById(req.params.ID);
     res.send(existingUser);
   } catch (err) {

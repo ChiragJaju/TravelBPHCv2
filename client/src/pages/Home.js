@@ -23,7 +23,7 @@ import {
 } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import PinkButton from "../components/PinkButton";
-
+import PopupPage from "../Popup/PopupPage";
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: "2vw 2.5vw",
@@ -54,6 +54,14 @@ function Home() {
 
   const { userID, setUserInfo, userInfo, setNotes } = useContext(AuthContext);
 
+  const [popupIsShown, setPopupIsShown] = useState(true);
+
+  const showPopupHandler = () => {
+    setPopupIsShown(true);
+  };
+  const hidePopupHandler = () => {
+    setPopupIsShown(false);
+  };
   const firstDateIsPastDayComparedToSecond = (firstDate, secondDate) =>
     firstDate.getTime() - secondDate.getTime() <= -1000 * 60 * 5;
 
@@ -135,122 +143,130 @@ function Home() {
   };
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h4" style={{ margin: "1vw 2.5vw  " }}>
-        Hello {userInfo.name},
-      </Typography>
-      <Card variant="outlined" className={classes.card}>
-        <Typography variant="h4">Create Request:</Typography>
-        <form className={classes.form} noValidate>
-          <CardContent>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="flex-start"
-            >
-              <Grid item xs={6}>
-                <FormControl required className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-required-label">
-                    Arrival
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-required-label"
-                    id="demo-simple-select-required"
-                    value={arrival}
-                    onChange={handleArrivalChange}
-                    className={classes.selectEmpty}
-                  >
-                    <MenuItem value={"Campus"}>Campus</MenuItem>
-                    <MenuItem value={"Airport"}>Airport</MenuItem>
-                    <MenuItem value={"Bustop"}>Bustop</MenuItem>
-                  </Select>
-                  <FormHelperText>Required</FormHelperText>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl required className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-required-label">
-                    Destination
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-required-label"
-                    id="demo-simple-select-required"
-                    value={destination}
-                    onChange={handleDestinationChange}
-                    className={classes.selectEmpty}
-                  >
-                    <MenuItem value={"Campus"}>Campus</MenuItem>
-                    <MenuItem value={"Airport"}>Airport</MenuItem>
-                    <MenuItem value={"Bustop"}>Bustop</MenuItem>
-                  </Select>
-                  <FormHelperText>Required</FormHelperText>
-                </FormControl>
-              </Grid>
-
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <>
+      {popupIsShown && (
+        <PopupPage
+          onHidePopup={hidePopupHandler}
+          onShowPopup={showPopupHandler}
+        />
+      )}
+      <div className={classes.root}>
+        <Typography variant="h4" style={{ margin: "1vw 2.5vw  " }}>
+          Hello {userInfo.name},
+        </Typography>
+        <Card variant="outlined" className={classes.card}>
+          <Typography variant="h4">Create Request:</Typography>
+          <form className={classes.form} noValidate>
+            <CardContent>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+              >
                 <Grid item xs={6}>
-                  <KeyboardDatePicker
-                    margin="normal"
-                    id="date-picker-dialog"
-                    label="Arrival Date"
-                    format="dd/MM/yyyy"
-                    className={classes.formControl}
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date",
-                    }}
-                  />
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-required-label">
+                      Arrival
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-required-label"
+                      id="demo-simple-select-required"
+                      value={arrival}
+                      onChange={handleArrivalChange}
+                      className={classes.selectEmpty}
+                    >
+                      <MenuItem value={"Campus"}>Campus</MenuItem>
+                      <MenuItem value={"Airport"}>Airport</MenuItem>
+                      <MenuItem value={"Bustop"}>Bustop</MenuItem>
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                  <KeyboardTimePicker
-                    margin="normal"
-                    id="time-picker"
-                    className={classes.formControl}
-                    label="Arrival Time"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change time",
-                    }}
-                  />
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-required-label">
+                      Destination
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-required-label"
+                      id="demo-simple-select-required"
+                      value={destination}
+                      onChange={handleDestinationChange}
+                      className={classes.selectEmpty}
+                    >
+                      <MenuItem value={"Campus"}>Campus</MenuItem>
+                      <MenuItem value={"Airport"}>Airport</MenuItem>
+                      <MenuItem value={"Bustop"}>Bustop</MenuItem>
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                  </FormControl>
                 </Grid>
-              </MuiPickersUtilsProvider>
-              <PinkButton handleSubmit={handleSubmit}>Submit</PinkButton>
-            </Grid>
-            {samePlace === true && (
-              <Typography variant="h6" color="error">
-                Please Choose Different Places!
-              </Typography>
-            )}
-            {pastDate === true && (
-              <Typography variant="h6" color="error">
-                Please Enter a Valid Date!
-              </Typography>
-            )}
-            {isFormSubmitted === true && (
-              <Typography variant="h6" className={classes.text}>
-                Form successfully Submitted!
-              </Typography>
-            )}
-            {isFormSubmitted === false && (
-              <Typography variant="h6" color="error">
-                Form was not submitted. Please check for duplication.
-              </Typography>
-            )}
-          </CardContent>
-        </form>
-      </Card>
-      <Typography variant="h4" style={{ margin: "1vw 2.5vw 0" }}>
-        To see your Posts click{" "}
-        <Link to="./yourposts" style={{ color: "#FF1268" }}>
-          here
-        </Link>
-      </Typography>
 
-      <Copyright />
-    </div>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid item xs={6}>
+                    <KeyboardDatePicker
+                      margin="normal"
+                      id="date-picker-dialog"
+                      label="Arrival Date"
+                      format="dd/MM/yyyy"
+                      className={classes.formControl}
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <KeyboardTimePicker
+                      margin="normal"
+                      id="time-picker"
+                      className={classes.formControl}
+                      label="Arrival Time"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "change time",
+                      }}
+                    />
+                  </Grid>
+                </MuiPickersUtilsProvider>
+                <PinkButton handleSubmit={handleSubmit}>Submit</PinkButton>
+              </Grid>
+              {samePlace === true && (
+                <Typography variant="h6" color="error">
+                  Please Choose Different Places!
+                </Typography>
+              )}
+              {pastDate === true && (
+                <Typography variant="h6" color="error">
+                  Please Enter a Valid Date!
+                </Typography>
+              )}
+              {isFormSubmitted === true && (
+                <Typography variant="h6" className={classes.text}>
+                  Form successfully Submitted!
+                </Typography>
+              )}
+              {isFormSubmitted === false && (
+                <Typography variant="h6" color="error">
+                  Form was not submitted. Please check for duplication.
+                </Typography>
+              )}
+            </CardContent>
+          </form>
+        </Card>
+        <Typography variant="h4" style={{ margin: "1vw 2.5vw 0" }}>
+          To see your Posts click{" "}
+          <Link to="./yourposts" style={{ color: "#FF1268" }}>
+            here
+          </Link>
+        </Typography>
+
+        <Copyright />
+      </div>
+    </>
   );
 }
 

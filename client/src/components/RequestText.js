@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Box, Button, Typography } from "@material-ui/core";
-import AuthContext from "../context/AuthContext";
+// import AuthContext from "../context/AuthContext";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
@@ -16,8 +16,8 @@ export default function RequestText(props) {
   const classes = useStyles();
   const [responseAccept, setResponseAccept] = useState(undefined);
   const [responseReject, setResponseReject] = useState(undefined);
-  const [currentResponse, setCurrentResponse] = useState(undefined);
-  const { userID, notes, setNotes } = useContext(AuthContext);
+  // const [currentResponse, setCurrentResponse] = useState(undefined);
+  // const { userID, notes, setNotes } = useContext(AuthContext);
   const currentReq = props.postDetails.Preq.filter((req) => {
     if (req.email === props.req.email) return true;
     else return false;

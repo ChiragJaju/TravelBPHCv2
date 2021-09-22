@@ -24,6 +24,7 @@ function AuthContextProvider(props) {
         {
           name: "",
           email: "",
+          status: "",
         },
       ],
     },
