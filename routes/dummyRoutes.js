@@ -64,6 +64,7 @@ router.route("/post/submit").post(async (req, res) => {
     const dateAndTime = req.body.dateAndTime;
     const arrival = req.body.arrival;
     const destination = req.body.destination;
+    const carStrength = req.body.carStrength;
     const existingPost = await posts.findOne({
       Pid: id,
       Pdestination: destination,
@@ -84,6 +85,7 @@ router.route("/post/submit").post(async (req, res) => {
       PdateAndTime: dateAndTime,
       Pname: name,
       Pemail: email,
+      PcarStrength: carStrength,
     });
     const savedUser = await newPost.save();
 
@@ -191,8 +193,10 @@ router.post("/posts/request/:ID", async (req, res) => {
   try {
     const name = req.body.Rname;
     const email = req.body.Remail;
+    const carStrength = req.body.RcarStrength;
     const existingPost = await posts.findById(req.params.ID);
     const preq = existingPost.Preq;
+    const PcarStrengthv2 = existingPost.PcarStrength;
     const index = preq.filter((post) => {
       if (post.name === name && post.email === email) return true;
       else return false;
@@ -202,7 +206,15 @@ router.post("/posts/request/:ID", async (req, res) => {
       res.send(false);
     } else {
       const updatedPost = await posts.findByIdAndUpdate(req.params.ID, {
-        Preq: [{ name: name, email: email, status: undefined }, ...preq],
+        Preq: [
+          {
+            name: name,
+            email: email,
+            status: undefined,
+            carStrength: carStrength,
+          },
+          ...preq,
+        ],
       });
       if (updatedPost) res.send(true);
     }
@@ -212,11 +224,16 @@ router.post("/posts/request/:ID", async (req, res) => {
   }
 });
 
-router.post("/postRequest/:response/:email", async (req, res) => {
+router.post("/postRequest/:response/:email/:carStrength", async (req, res) => {
   try {
     // console.log(req.body.Preq);
     // console.log(req.params.email);
     // console.log(req.body.Preq);
+    const oldCarStrength = req.body.PcarStrength;
+    let newCarStrength = req.params.carStrength;
+    if (req.params.response === "false") {
+      newCarStrength = 0;
+    }
     await req.body.Preq.map((request) => {
       if (request.email === req.params.email) {
         request.status = req.params.response;
@@ -226,6 +243,7 @@ router.post("/postRequest/:response/:email", async (req, res) => {
     // console.log(req.body.Preq);
     const updatedReq = await posts.findByIdAndUpdate(req.body._id, {
       Preq: req.body.Preq,
+      PcarStrength: parseInt(oldCarStrength) + parseInt(newCarStrength),
     });
     const response = req.params.response;
     // console.log(response);
@@ -234,6 +252,7 @@ router.post("/postRequest/:response/:email", async (req, res) => {
     // console.log(existingUser._id.toString());
     const oldRequestsMade = existingUser.requestsMade;
     const oldPostToShow = existingUser.postToShow;
+
     const updatedPost = await user.findByIdAndUpdate(
       existingUser._id.toString(),
       {

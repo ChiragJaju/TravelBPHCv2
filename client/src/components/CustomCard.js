@@ -1,5 +1,15 @@
 import React, { useContext, useState } from "react";
-import { Card, Grid, Box, Typography } from "@material-ui/core";
+import {
+  Card,
+  Grid,
+  Box,
+  Typography,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+  FormHelperText,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
@@ -26,12 +36,24 @@ const useStyles = makeStyles((theme) => ({
   textFalse: {
     color: "#FF0000",
   },
+  selectEmpty: {
+    padding: "0px 50px 0px",
+  },
 }));
 export default function CustomCard(props) {
   const classes = useStyles();
   const [isReqSent, setIsReqSent] = useState(undefined);
-
+  const [carStrength, setCarStrength] = useState("-");
   const { userInfo } = useContext(AuthContext);
+
+  const [isRequestValid, setIsRequestValid] = useState(undefined);
+  const handleCarChange = (event) => {
+    setCarStrength(event.target.value);
+    if (event.target.value + props.post.PcarStrength <= 4)
+      setIsRequestValid(true);
+    else setIsRequestValid(false);
+  };
+
   let dateData = props.post.PdateAndTime;
   const handleClick = async (event) => {
     // console.log(props.post._id);
@@ -39,12 +61,16 @@ export default function CustomCard(props) {
     const sendDetails = {
       Rname: userInfo.name,
       Remail: userInfo.email,
+      RcarStrength: carStrength,
     };
-    const response = await axios.post(
-      "/api/posts/request/" + props.post._id,
-      sendDetails
-    );
-    setIsReqSent(response.data);
+    if (isRequestValid) {
+      const response = await axios.post(
+        "/api/posts/request/" + props.post._id,
+        sendDetails
+      );
+      setIsReqSent(response.data);
+    }
+
     isRequested = [];
   };
 
@@ -155,21 +181,65 @@ export default function CustomCard(props) {
                 {props.post.Pemail}
               </Box>
             </Grid>
-
-            {isRequested.length === 0 && (
-              <PinkButton handleSubmit={handleClick}>Request</PinkButton>
+            <Grid item xs={6}>
+              <Box
+                fontSize="h5.fontSize"
+                color="fontWeightBold"
+                display="inline"
+              >
+                People in Car: {props.post.PcarStrength}
+              </Box>
+            </Grid>
+            {isRequested.length === 0 && props.post.PcarStrength <= 3 && (
+              <>
+                <Grid
+                  item
+                  xs={6}
+                  style={{ textAlign: "right" }}
+                  className={classes.gridItem}
+                >
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-required-label">
+                      Car Strength
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-required-label"
+                      id="demo-simple-select-required"
+                      value={carStrength}
+                      onChange={handleCarChange}
+                      className={classes.selectEmpty}
+                    >
+                      <MenuItem value={1}>1</MenuItem>
+                      <MenuItem value={2}>2</MenuItem>
+                      <MenuItem value={3}>3</MenuItem>
+                      <MenuItem value={4}>4</MenuItem>
+                    </Select>
+                    <FormHelperText>Required</FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                  <PinkButton handleSubmit={handleClick}>Request</PinkButton>
+                </Grid>
+              </>
             )}
             {isRequested.length !== 0 && (
+              <Grid
+                item
+                xs={6}
+                style={{ textAlign: "right" }}
+                className={classes.gridItem}
+              >
+                <Typography variant="h6" className={classes.text}>
+                  {"Request was sent."}
+                </Typography>{" "}
+              </Grid>
+            )}
+            {isRequestValid === false && (
               <Typography variant="h6" className={classes.textFalse}>
-                {"Request was already sent."}
+                {"Maximum only 4 people allowed in the Car"}
               </Typography>
             )}
 
-            {isReqSent === true && (
-              <Typography variant="h6" className={classes.text}>
-                {"Request Successfully Submitted!"}
-              </Typography>
-            )}
             {/* {isReqSent === false && (
               <Typography variant="h6" className={classes.textFalse}>
                 {"Request was already sent."}

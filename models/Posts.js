@@ -21,8 +21,10 @@ var Posts = new Schema({
       name: String,
       email: String,
       status: String,
+      carStrength: Number,
     },
   ],
+  PcarStrength: Number,
 });
 
 module.exports = Posts = mongoose.model("posts", Posts);

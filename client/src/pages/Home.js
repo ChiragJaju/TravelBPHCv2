@@ -51,7 +51,7 @@ function Home() {
   const [samePlace, setSamePlace] = useState(false);
   const [pastDate, setPastDate] = useState();
   const [isFormSubmitted, setIsFormSubmitted] = useState(undefined);
-
+  const [carStrength, setCarStrength] = useState(1);
   const { userID, setUserInfo, userInfo, setNotes } = useContext(AuthContext);
 
   const [popupIsShown, setPopupIsShown] = useState(true);
@@ -98,6 +98,10 @@ function Home() {
   const handleArrivalChange = (event) => {
     setArrival(event.target.value);
   };
+  const handleCarChange = (event) => {
+    setCarStrength(event.target.value);
+  };
+
   const handleDestinationChange = (event) => {
     setDestination(event.target.value);
   };
@@ -134,11 +138,11 @@ function Home() {
       dateAndTime: dateAndTime,
       arrival: arrival,
       destination: destination,
+      carStrength: carStrength,
     };
 
     const response = await axios.post("/api/post/submit", newPost);
     const isSubmitted = response.data.value;
-
     setIsFormSubmitted(isSubmitted);
   };
 
@@ -230,6 +234,26 @@ function Home() {
                         "aria-label": "change time",
                       }}
                     />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl required className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-required-label">
+                        Car Strength
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-required-label"
+                        id="demo-simple-select-required"
+                        value={carStrength}
+                        onChange={handleCarChange}
+                        className={classes.selectEmpty}
+                      >
+                        <MenuItem value={1}>1</MenuItem>
+                        <MenuItem value={2}>2</MenuItem>
+                        <MenuItem value={3}>3</MenuItem>
+                        <MenuItem value={4}>4</MenuItem>
+                      </Select>
+                      <FormHelperText>Required</FormHelperText>
+                    </FormControl>
                   </Grid>
                 </MuiPickersUtilsProvider>
                 <PinkButton handleSubmit={handleSubmit}>Submit</PinkButton>

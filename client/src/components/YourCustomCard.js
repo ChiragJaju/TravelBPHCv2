@@ -90,6 +90,11 @@ export default function YourCustomCard(props) {
             {dateData.hour < 12 ? " am" : " pm"}
           </Box>
         </Grid>
+        <Grid xs={12} className={classes.gridItem}>
+          <Box fontSize="h5.fontSize" color="fontWeightBold" display="inline">
+            Number of People you have in Car: {props.post.PcarStrength}
+          </Box>
+        </Grid>
         {props.post.Preq.map((req) => {
           return (
             <Grid item xs={12}>

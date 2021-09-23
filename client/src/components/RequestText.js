@@ -16,6 +16,7 @@ export default function RequestText(props) {
   const classes = useStyles();
   const [responseAccept, setResponseAccept] = useState(undefined);
   const [responseReject, setResponseReject] = useState(undefined);
+
   // const [currentResponse, setCurrentResponse] = useState(undefined);
   // const { userID, notes, setNotes } = useContext(AuthContext);
   const currentReq = props.postDetails.Preq.filter((req) => {
@@ -24,16 +25,21 @@ export default function RequestText(props) {
   });
   // console.log(currentReq[0].status);
   const handleClickAccept = async () => {
-    const isResponseAccept = await axios.post(
-      "/api/postRequest/true/" + props.req.email,
-      props.postDetails
-    );
-    setResponseAccept(isResponseAccept.data);
+    if (props.req.carStrength + props.postDetails.PcarStrength <= 4) {
+      const isResponseAccept = await axios.post(
+        "/api/postRequest/true/" +
+          props.req.email +
+          "/" +
+          props.req.carStrength,
+        props.postDetails
+      );
+      setResponseAccept(isResponseAccept.data);
+    }
     // console.log(props.postDetails);
   };
   const handleClickReject = async () => {
     const isResponseReject = await axios.post(
-      "/api/postRequest/false/" + props.req.email,
+      "/api/postRequest/false/" + props.req.email + "/" + props.req.carStrength,
       props.postDetails
     );
     setResponseReject(isResponseReject.data);
@@ -46,6 +52,7 @@ export default function RequestText(props) {
   //   };
   //   fetchData();
   // }, [setNotes, responseAccept, responseReject]);
+  // console.log(props.req);
   return (
     <>
       <Box
@@ -53,7 +60,8 @@ export default function RequestText(props) {
         color="fontWeightBold"
         style={{ margin: "0px 0px 20px 0px" }}
       >
-        From: {props.req.name} &nbsp;||&nbsp; Email: {props.req.email}
+        From: {props.req.name} &nbsp;||&nbsp; Email: {props.req.email}|| Number
+        of People they have: {props.req.carStrength}
         {props.current && currentReq[0].status === "true" && (
           <Typography variant="h6" className={classes.text}>
             {"Request Accepted"}
