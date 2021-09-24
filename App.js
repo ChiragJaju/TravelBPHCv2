@@ -1,6 +1,8 @@
 const express = require("express");
 const session = require("express-session");
+const jwt = require("jsonwebtoken");
 const app = express();
+app.use(express.json());
 const passport = require("passport");
 app.use(
   session({
@@ -12,13 +14,13 @@ app.use(passport.session());
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const user = require("./models/user");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
 require("./auth");
 dotenv.config();
 
-app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
@@ -27,8 +29,44 @@ app.use(
   })
 );
 
-function isLoggedIn(req, res, next) {
-  req.user ? next() : res.sendStatus(401);
+async function isLoggedIn(req, res, next) {
+  if (req.user._json.domain === "hyderabad.bits-pilani.ac.in") {
+    const name = req.user.displayName;
+    const email = req.user.email;
+    // console.log(req.user);
+    const currentUser = await user.findOne({ email: email });
+    if (currentUser === null) {
+      //create one
+      const newUser = new user({
+        name,
+        email,
+      });
+      const savedUser = await newUser.save();
+      const token = jwt.sign(
+        {
+          user: savedUser._id,
+        },
+        process.env.JWT_SECRET
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+      });
+    } else {
+      const token = jwt.sign(
+        {
+          user: currentUser._id,
+        },
+        process.env.JWT_SECRET
+      );
+      //send the token in a cookie
+      res.cookie("token", token, {
+        httpOnly: true,
+      });
+    }
+    // create jwt token
+
+    next();
+  } else res.send("Please login with BITSmail only");
 }
 
 mongoose.connect(process.env.MDB_CONNECT);
@@ -43,9 +81,6 @@ app.use("/api", require("./routes/dummyRoutes"));
 //   res.send(raw);
 // });
 
-app.get("/google", (req, res) => {
-  res.send("<a href='/auth/google'>Authenticate with Google</a>");
-});
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["email", "profile"] })
@@ -53,7 +88,7 @@ app.get(
 app.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "/protected",
+    successRedirect: "/auth/google/success",
     failureRedirect: "/auth/failure",
   })
 );
@@ -61,9 +96,8 @@ app.get("/auth/failure", (req, res) => {
   res.send("Something went wrong");
 });
 
-app.get("/protected", isLoggedIn, (req, res) => {
-  res.send("Hello!");
-  console.log(req.user);
+app.get("/auth/google/success", isLoggedIn, (req, res) => {
+  res.redirect("/");
 });
 app.get("/google/logout", (req, res) => {
   req.logout();

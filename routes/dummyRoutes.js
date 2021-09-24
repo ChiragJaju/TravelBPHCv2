@@ -105,7 +105,7 @@ router.post("/login", async (req, res) => {
     const existingUser = await user.findOne({ email: email });
     if (!existingUser) {
       return res.json({
-        errorMessage: "Wrong Email pr password",
+        errorMessage: "Wrong Email or password",
         value: false,
       });
     }
@@ -115,7 +115,7 @@ router.post("/login", async (req, res) => {
     );
     if (!passwordCorrect)
       return res.json({
-        errorMessage: "Wrong Email pr password",
+        errorMessage: "Wrong Email or password",
         value: false,
       });
     const token = jwt.sign(
@@ -272,3 +272,5 @@ router.post("/postRequest/:response/:email/:carStrength", async (req, res) => {
     res.status(500).send(false);
   }
 });
+
+//////////////////////

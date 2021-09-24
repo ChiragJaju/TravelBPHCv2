@@ -12,6 +12,7 @@ import AuthContext from "../context/AuthContext";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
   div: {
     height: "100vh",
   },
+  googleLogin: {
+    margin: theme.spacing(3, 0, 2),
+    color: "#F0f0f0",
+  },
 }));
 
 export default function Login() {
@@ -48,6 +53,7 @@ export default function Login() {
   const handlePasswordChange = (event) => {
     setPasswordInput(event.target.value);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -128,6 +134,26 @@ export default function Login() {
               </Typography>
             )}
           </form>
+          <Typography component="h1" variant="h5">
+            OR
+          </Typography>
+          {/* <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.googleLogin}
+          > */}
+          {/* <Link
+            href="localhost:3000/auth/google"
+            style={{ textDecoration: "none", color: "#f0f0f0" }}
+          > */}
+
+          <a href="http://localhost:5000/auth/google">
+            {"Login with "} &nbsp;<i with i class="fab fa-google"></i>
+          </a>
+          {/* </Link> */}
+          {/* </Button> */}
         </div>
       </Container>
       <Copyright />
