@@ -149,7 +149,7 @@ export default function Login() {
             style={{ textDecoration: "none", color: "#f0f0f0" }}
           > */}
 
-          <a href="http://localhost:5000/auth/google">
+          <a href="http://https://travel-bphc-v2.herokuapp.com//auth/google">
             {"Login with "} &nbsp;<i with i class="fab fa-google"></i>
           </a>
           {/* </Link> */}
