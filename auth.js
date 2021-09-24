@@ -7,8 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "http://https://travel-bphc-v2.herokuapp.com/google/callback",
+      callbackURL: "https://travel-bphc-v2.herokuapp.com/google/callback",
       passReqToCallback: true,
     },
     function (request, accessToken, refreshToken, profile, done) {
