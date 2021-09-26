@@ -10,7 +10,7 @@ function Map() {
   return (
     // <div className="markercluster-map"></div>
     // <MapContainer
-    //   center={center}
+    //   center={center}asd
     //   zoom={13}
     //   scrollWheelZoom={false}
     //   className="markercluster-map"
