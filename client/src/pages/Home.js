@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import Copyright from "../components/Copyright";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "./home.css";
 import axios from "axios";
 import {
   Typography,
@@ -24,6 +26,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import PinkButton from "../components/PinkButton";
 import PopupPage from "../Popup/PopupPage";
+import Map from "../components/Map";
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: "2vw 2.5vw",
@@ -186,6 +189,7 @@ function Home() {
                     </Select>
                     <FormHelperText>Required</FormHelperText>
                   </FormControl>
+                  {/* <Map></Map> */}
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl required className={classes.formControl}>
@@ -286,6 +290,24 @@ function Home() {
           <Link to="./yourposts" style={{ color: "#FF1268" }}>
             here
           </Link>
+          <div className="App">
+            <MapContainer
+              center={[51.505, -0.09]}
+              zoom={13}
+              scrollWheelZoom={false}
+              className="markercluster-map"
+            >
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[51.505, -0.09]}>
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker>
+            </MapContainer>
+          </div>
         </Typography>
 
         <Copyright />
