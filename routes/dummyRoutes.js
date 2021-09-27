@@ -280,4 +280,20 @@ router.post("/postRequest/:response/:email/:carStrength", async (req, res) => {
   }
 });
 
-//////////////////////
+router.get("/filterDate/:date/:month/:year", async (req, res) => {
+  try {
+    const date = parseInt(req.params.date);
+    const month = parseInt(req.params.month) + 1;
+    const year = parseInt(req.params.year);
+    const response = await posts.find({
+      "PdateAndTime.date": date,
+      "PdateAndTime.month": month,
+      "PdateAndTime.year": year,
+    });
+
+    res.send(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(false);
+  }
+});

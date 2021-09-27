@@ -76,17 +76,27 @@ export default function Filter() {
     setPostsToShow(filteredPosts);
   };
   const handleDateSubmit = async () => {
-    const response = await notes.filter((post) => {
-      const goodDate = new Date(post.PdateAndTime.data);
-      if (
-        Math.abs(
-          goodDate.setHours(0, 0, 0, 0) - selectedDate.setHours(0, 0, 0, 0)
-        ) <= 0
-      )
-        return true;
-      else return false;
-    });
-    setPostsToShow(response);
+    // const response = await notes.filter((post) => {
+    //   const goodDate = new Date(post.PdateAndTime.data);
+    //   if (
+    //     Math.abs(
+    //       goodDate.setHours(0, 0, 0, 0) - selectedDate.setHours(0, 0, 0, 0)
+    //     ) <= 0
+    //   )
+    //     return true;
+    //   else return false;
+    // });
+    const apiResponse = await axios.get(
+      "/api/filterDate/" +
+        selectedDate.getDate() +
+        "/" +
+        selectedDate.getMonth() +
+        "/" +
+        selectedDate.getFullYear()
+    );
+    // console.log(apiResponse.data);
+
+    setPostsToShow(apiResponse.data);
   };
   useEffect(() => {
     const fetchData = async () => {
