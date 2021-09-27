@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "104vh",
     textAlign: "center",
     width: "100vw",
+    zIndex: 10,
   },
 
   footer: {

@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
 import PinkButton from "./PinkButton";
+import Map from "./AllPostsMap/Map";
 const useStyles = makeStyles((theme) => ({
   card: {
     margin: "1vw 1.5vw",
@@ -39,11 +40,14 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     padding: "0px 50px 0px",
   },
+  map: {
+    margin: "10px 0 10px",
+  },
 }));
 export default function CustomCard(props) {
   const classes = useStyles();
   const [isReqSent, setIsReqSent] = useState(undefined);
-  const [carStrength, setCarStrength] = useState("1");
+  const [carStrength, setCarStrength] = useState("");
   const { userInfo } = useContext(AuthContext);
 
   const [isRequestValid, setIsRequestValid] = useState(undefined);
@@ -56,14 +60,15 @@ export default function CustomCard(props) {
 
   let dateData = props.post.PdateAndTime;
   const handleClick = async (event) => {
-    // console.log(props.post._id);
     // console.log(isRequested);
     const sendDetails = {
       Rname: userInfo.name,
       Remail: userInfo.email,
       RcarStrength: carStrength,
     };
+
     if (isRequestValid) {
+      // console.log(props.post._id);
       const response = await axios.post(
         "/api/posts/request/" + props.post._id,
         sendDetails
@@ -195,7 +200,7 @@ export default function CustomCard(props) {
                 <Grid
                   item
                   xs={6}
-                  style={{ textAlign: "right" }}
+                  style={{ textAlign: "right", marginBottom: "0" }}
                   className={classes.gridItem}
                 >
                   <FormControl required className={classes.formControl}>
@@ -217,11 +222,19 @@ export default function CustomCard(props) {
                     <FormHelperText>Required</FormHelperText>
                   </FormControl>
                 </Grid>
+
                 <Grid item xs={6}>
                   <PinkButton handleSubmit={handleClick}>Request</PinkButton>
                 </Grid>
               </>
             )}
+
+            <Grid item xs={12} className={classes.map}>
+              <Map
+                ArrivalLocation={props.post.ArrivalLocation}
+                DestinationLocation={props.post.DestinationLocation}
+              />
+            </Grid>
             {isRequested.length !== 0 && (
               <Grid
                 item

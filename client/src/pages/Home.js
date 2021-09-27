@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     alignItems: "center",
+    marginBottom: "80px",
   },
   formControl: {
     margin: "0 0 20px",
