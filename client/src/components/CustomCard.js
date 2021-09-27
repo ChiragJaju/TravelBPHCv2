@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomCard(props) {
   const classes = useStyles();
   const [isReqSent, setIsReqSent] = useState(undefined);
-  const [carStrength, setCarStrength] = useState("-");
+  const [carStrength, setCarStrength] = useState("1");
   const { userInfo } = useContext(AuthContext);
 
   const [isRequestValid, setIsRequestValid] = useState(undefined);
@@ -73,7 +73,7 @@ export default function CustomCard(props) {
 
     isRequested = [];
   };
-
+  // console.log(props.post.ArrivalLocation);
   // console.log(props.post.Preq);
   let isRequested = props.post.Preq.filter((request) => {
     if (request.email === userInfo.email) return true;

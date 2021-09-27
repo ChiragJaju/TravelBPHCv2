@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
   text: {
     color: "#33AB3E",
   },
+  form: {
+    marginBottom: "-20px",
+  },
 }));
 function Home() {
   const classes = useStyles();
@@ -55,8 +58,26 @@ function Home() {
   const [pastDate, setPastDate] = useState();
   const [isFormSubmitted, setIsFormSubmitted] = useState(undefined);
   const [carStrength, setCarStrength] = useState(1);
+  const [draggable, setDraggable] = useState(false);
   const { userID, setUserInfo, userInfo, setNotes } = useContext(AuthContext);
-
+  const [arrivalCoordinates, setArrivalCoordinates] = useState({
+    lat: 17.237332384,
+    lng: 78.423498306,
+  });
+  const [destinationCoordinates, setDestinationCoordinates] = useState({
+    lat: 17.5449,
+    lng: 78.5718,
+  });
+  const [currentLocation, setCurrentLocation] = useState();
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      // console.log(position.coords.latitude);
+      setCurrentLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    });
+  }, []);
   const [popupIsShown, setPopupIsShown] = useState(true);
 
   const showPopupHandler = () => {
@@ -100,6 +121,30 @@ function Home() {
 
   const handleArrivalChange = (event) => {
     setArrival(event.target.value);
+    if (event.target.value === "Current Location") {
+      setDraggable(false);
+      setArrivalCoordinates(currentLocation);
+    } else if (event.target.value === "Airport") {
+      setDraggable(false);
+      setArrivalCoordinates({
+        lat: 17.237332384,
+        lng: 78.423498306,
+      });
+    } else if (event.target.value === "Campus") {
+      setDraggable(false);
+      setArrivalCoordinates({
+        lat: 17.5449,
+        lng: 78.5718,
+      });
+    } else if (event.target.value === "Bustop") {
+      setDraggable(false);
+      setArrivalCoordinates({
+        lat: 17.4478,
+        lng: 78.4982,
+      });
+    } else if (event.target.value === "Custom") {
+      setDraggable(true);
+    }
   };
   const handleCarChange = (event) => {
     setCarStrength(event.target.value);
@@ -107,12 +152,36 @@ function Home() {
 
   const handleDestinationChange = (event) => {
     setDestination(event.target.value);
+    if (event.target.value === "Current Location") {
+      setDraggable(false);
+      setDestinationCoordinates(currentLocation);
+    } else if (event.target.value === "Airport") {
+      setDraggable(false);
+      setDestinationCoordinates({
+        lat: 17.237332384,
+        lng: 78.423498306,
+      });
+    } else if (event.target.value === "Campus") {
+      setDraggable(false);
+      setDestinationCoordinates({
+        lat: 17.5449,
+        lng: 78.5718,
+      });
+    } else if (event.target.value === "Bustop") {
+      setDraggable(false);
+      setDestinationCoordinates({
+        lat: 17.4478,
+        lng: 78.4982,
+      });
+    } else if (event.target.value === "Custom") {
+      setDraggable(true);
+    }
   };
 
   const handleSubmit = async (event) => {
     //Checks
     event.preventDefault();
-    if (arrival === destination) {
+    if (arrival === destination && arrival !== "Custom") {
       setSamePlace(true);
       setIsFormSubmitted(undefined);
       return;
@@ -142,6 +211,14 @@ function Home() {
       arrival: arrival,
       destination: destination,
       carStrength: carStrength,
+      arrivalLocation: {
+        lat: arrivalCoordinates.lat,
+        lng: arrivalCoordinates.lng,
+      },
+      destinationLocation: {
+        lat: destinationCoordinates.lat,
+        lng: destinationCoordinates.lng,
+      },
     };
 
     const response = await axios.post("/api/post/submit", newPost);
@@ -159,7 +236,10 @@ function Home() {
       )}
       <div className={classes.root}>
         <Typography variant="h4" style={{ margin: "1vw 2.5vw  " }}>
-          Hello {userInfo.name},
+          Hello {userInfo.name}, To see your Posts click{" "}
+          <Link to="./yourposts" style={{ color: "#FF1268" }}>
+            here
+          </Link>{" "}
         </Typography>
         <Card variant="outlined" className={classes.card}>
           <Typography variant="h4">Create Request:</Typography>
@@ -186,10 +266,13 @@ function Home() {
                       <MenuItem value={"Campus"}>Campus</MenuItem>
                       <MenuItem value={"Airport"}>Airport</MenuItem>
                       <MenuItem value={"Bustop"}>Bustop</MenuItem>
+                      <MenuItem value={"Current Location"}>
+                        Current Location
+                      </MenuItem>
+                      <MenuItem value={"Custom"}>Custom</MenuItem>
                     </Select>
                     <FormHelperText>Required</FormHelperText>
                   </FormControl>
-                  {/* <Map></Map> */}
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl required className={classes.formControl}>
@@ -206,6 +289,10 @@ function Home() {
                       <MenuItem value={"Campus"}>Campus</MenuItem>
                       <MenuItem value={"Airport"}>Airport</MenuItem>
                       <MenuItem value={"Bustop"}>Bustop</MenuItem>
+                      <MenuItem value={"Current Location"}>
+                        Current Location
+                      </MenuItem>
+                      <MenuItem value={"Custom"}>Custom</MenuItem>
                     </Select>
                     <FormHelperText>Required</FormHelperText>
                   </FormControl>
@@ -284,13 +371,20 @@ function Home() {
               )}
             </CardContent>
           </form>
+          <Map
+            arrivalCoordinates={arrivalCoordinates}
+            setArrivalCoordinates={setArrivalCoordinates}
+            destinationCoordinates={destinationCoordinates}
+            setDestinationCoordinates={setDestinationCoordinates}
+            setArrival={setArrival}
+            setDestination={setDestination}
+            draggable={draggable}
+            setDraggable={setDraggable}
+          />
         </Card>
-        <Typography variant="h4" style={{ margin: "1vw 2.5vw 0" }}>
-          To see your Posts click{" "}
-          <Link to="./yourposts" style={{ color: "#FF1268" }}>
-            here
-          </Link>
-          <div className="App">
+
+        {/* FUCKING WORKSSSSSS */}
+        {/* <div className="App">
             <MapContainer
               center={[51.505, -0.09]}
               zoom={13}
@@ -307,8 +401,8 @@ function Home() {
                 </Popup>
               </Marker>
             </MapContainer>
-          </div>
-        </Typography>
+          </div> */}
+        {/* /FUCKING WORKS */}
 
         <Copyright />
       </div>

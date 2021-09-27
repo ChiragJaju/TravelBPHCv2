@@ -1,31 +1,47 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
-function DraggableMarker() {
-  const [position, setPosition] = useState();
-  const markerRef = useRef(null);
+function DraggableMarker(props) {
   const center = {
-    lat: 51.505,
-    lng: -0.09,
+    lat: props.coordinates.lat,
+    lng: props.coordinates.lng,
   };
+
+  // const [position, setPosition] = useState(center);
+  const markerRef = useRef(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          setPosition(marker.getLatLng());
+          props.setCoordinates(marker.getLatLng());
         }
       },
     }),
     []
   );
+  const toggleDraggable = useCallback(() => {
+    props.setDraggable((d) => {
+      if (d === false) {
+        props.fieldSetter("Custom");
+      }
+      return !d;
+    });
+  }, []);
+
   return (
     <Marker
-      draggable={true}
+      draggable={props.draggable}
       eventHandlers={eventHandlers}
-      position={position}
+      position={center}
       ref={markerRef}
-    ></Marker>
+    >
+      <Popup minWidth={90}>
+        <span onClick={toggleDraggable}>
+          {props.draggable ? "Marker is draggable" : props.message}
+        </span>
+      </Popup>
+    </Marker>
   );
 }
 

@@ -25,6 +25,8 @@ var Posts = new Schema({
     },
   ],
   PcarStrength: Number,
+  ArrivalLocation: { lat: String, lng: String },
+  DestinationLocation: { lat: String, lng: String },
 });
 
 module.exports = Posts = mongoose.model("posts", Posts);

@@ -65,11 +65,16 @@ router.route("/post/submit").post(async (req, res) => {
     const arrival = req.body.arrival;
     const destination = req.body.destination;
     const carStrength = req.body.carStrength;
+    const arrivalLocation = req.body.arrivalLocation;
+    const destinationLocation = req.body.destinationLocation;
+
     const existingPost = await posts.findOne({
       Pid: id,
       Pdestination: destination,
       Parrival: arrival,
       PdateAndTime: dateAndTime,
+      ArrivalLocation: arrivalLocation,
+      DestinationLocation: destinationLocation,
     });
     if (existingPost) {
       return res.json({
@@ -86,6 +91,8 @@ router.route("/post/submit").post(async (req, res) => {
       Pname: name,
       Pemail: email,
       PcarStrength: carStrength,
+      ArrivalLocation: arrivalLocation,
+      DestinationLocation: destinationLocation,
     });
     const savedUser = await newPost.save();
 
