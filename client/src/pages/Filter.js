@@ -64,6 +64,7 @@ export default function Filter() {
   const [isAnyChecked, setIsAnyChecked] = useState();
   const [nameCheckbox, setNameCheckbox] = useState(false);
   const [isNameEntered, setIsNameEntered] = useState();
+  const [tooMany, setTooMany] = useState();
   const handleNameCheckbox = (e) => {
     setNameCheckbox(e.target.checked);
   };
@@ -199,10 +200,6 @@ export default function Filter() {
       const nameData = { name: name };
       sendData = Object.assign(sendData, nameData);
     }
-    if (dateCheckbox) {
-      const dateData = { dateData: selectedDate };
-      sendData = Object.assign(sendData, dateData);
-    }
     if (arrivalCheckbox) {
       const arrivalData = { arrivalCoordinates: arrivalCoordinates };
       sendData = Object.assign(sendData, arrivalData);
@@ -212,6 +209,16 @@ export default function Filter() {
         destinationCoordinates: destinationCoordinates,
       };
       sendData = Object.assign(sendData, destinationData);
+    }
+    if (Object.keys(sendData).length > 1) {
+      setTooMany(true);
+      return;
+    } else {
+      setTooMany(false);
+    }
+    if (dateCheckbox) {
+      const dateData = { dateData: selectedDate.toString() };
+      sendData = Object.assign(sendData, dateData);
     }
     if (
       !nameCheckbox &&
@@ -224,11 +231,10 @@ export default function Filter() {
     } else {
       setIsAnyChecked(true);
     }
-
-    // const apiResponse = await axios.post("/api/filter", sendData);
+    // console.log(sendData);
+    const apiResponse = await axios.post("/api/filter", sendData);
     // console.log(apiResponse.data);
-    // setPostsToShow(apiResponse.data);
-    console.log(sendData);
+    setPostsToShow(apiResponse.data);
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -247,7 +253,6 @@ export default function Filter() {
     <>
       <div>
         <Card variant="outlined" className={classes.card}>
-          <Typography variant="h4">Filter</Typography>
           <form className={classes.form} noValidate>
             <CardContent>
               <Grid
@@ -323,7 +328,6 @@ export default function Filter() {
                     id="outlined-basic"
                     label="Name"
                     variant="outlined"
-                    helperText="Write Full Name as per BITSmail"
                     value={name}
                     onChange={handleNameChange}
                   />
@@ -370,9 +374,13 @@ export default function Filter() {
                   Check respective boxes to include in filtering. (Location
                   under 2km)
                 </Typography>
+                <Typography variant="h6">
+                  Rules: Search using only one of the three parameters at a time
+                  (i.e Arrival, Destination, Name).
+                </Typography>
                 <Grid item xs={12} className={classes.submitButton}>
                   <PinkButton handleSubmit={handleDateSubmit}>
-                    By Date
+                    Search
                   </PinkButton>
                   {isAnyChecked === false && (
                     <Typography variant="h6" color="error">
@@ -382,6 +390,12 @@ export default function Filter() {
                   {isNameEntered === false && (
                     <Typography variant="h6" color="error">
                       Please Enter a Name or Uncheck the respective Checkbox.
+                    </Typography>
+                  )}
+                  {tooMany === true && (
+                    <Typography variant="h6" color="error">
+                      Please Select only ONE of the following: Arrival,
+                      Destination, Name; And Search Again.
                     </Typography>
                   )}
                 </Grid>

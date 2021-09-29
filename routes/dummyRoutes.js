@@ -73,8 +73,14 @@ router.route("/post/submit").post(async (req, res) => {
       Pdestination: destination,
       Parrival: arrival,
       PdateAndTime: dateAndTime,
-      ArrivalLocation: arrivalLocation,
-      DestinationLocation: destinationLocation,
+      ArrivalLocation: {
+        type: "Point",
+        coordinates: [arrivalLocation.lng, arrivalLocation.lat],
+      },
+      DestinationLocation: {
+        type: "Point",
+        coordinates: [destinationLocation.lng, destinationLocation.lat],
+      },
     });
     if (existingPost) {
       return res.json({
@@ -91,11 +97,17 @@ router.route("/post/submit").post(async (req, res) => {
       Pname: name,
       Pemail: email,
       PcarStrength: carStrength,
-      ArrivalLocation: arrivalLocation,
-      DestinationLocation: destinationLocation,
+      ArrivalLocation: {
+        type: "Point",
+        coordinates: [arrivalLocation.lng, arrivalLocation.lat],
+      },
+      DestinationLocation: {
+        type: "Point",
+        coordinates: [destinationLocation.lng, destinationLocation.lat],
+      },
     });
     const savedUser = await newPost.save();
-
+    console.log(savedUser);
     res.send({ value: true });
   } catch (err) {
     console.error(err);
@@ -300,8 +312,71 @@ router.post("/postRequest/:response/:email/:carStrength", async (req, res) => {
 
 router.post("/filter", async (req, res) => {
   try {
-    console.log(req.body);
-    res.sendStatus(200);
+    const d = req.body;
+    const dateData = new Date(d.dateData);
+    let queryData = {};
+    if (d.arrivalCoordinates !== undefined) {
+      queryData = Object.assign(queryData, {
+        ArrivalLocation: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [d.arrivalCoordinates.lng, d.arrivalCoordinates.lat],
+            },
+            $maxDistance: 2000, //In metres
+          },
+        },
+      });
+    }
+    if (d.destinationCoordinates !== undefined) {
+      queryData = Object.assign(queryData, {
+        DestinationLocation: {
+          $nearSphere: {
+            $geometry: {
+              type: "Point",
+              coordinates: [
+                d.destinationCoordinates.lng,
+                d.destinationCoordinates.lat,
+              ],
+            },
+            $maxDistance: 2000, //In metres
+          },
+        },
+      });
+    }
+    // const response = await posts.find({
+    //   ArrivalLocation: {
+    //     $near: {
+    //       $geometry: {
+    //         type: "Point",
+    //         coordinates: [d.arrivalCoordinates.lng, d.arrivalCoordinates.lat],
+    //       },
+    //       $maxDistance: 2000, //In metres
+    //     },
+    //   },
+    // });
+    if (d.dateData !== undefined) {
+      const date = dateData.getDate();
+      const month = dateData.getMonth() + 1;
+      const year = dateData.getFullYear();
+      const query = {
+        "PdateAndTime.date": date,
+        "PdateAndTime.month": month,
+        "PdateAndTime.year": year,
+      };
+      queryData = Object.assign(queryData, query);
+    }
+    if (d.name !== undefined) {
+      queryData = Object.assign(queryData, {
+        $text: { $search: d.name },
+      });
+    }
+
+    const response = await posts.find(queryData);
+    res.send(response);
+    // console.log(response);
+    // console.log(queryData);
+    // res.sendStatus(200);
   } catch (err) {
     console.error(err);
     res.status(500).send(false);
