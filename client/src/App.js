@@ -9,6 +9,7 @@ import axios from "axios";
 import YourPosts from "./pages/YourPosts";
 import Navbar from "./pages/Navbar";
 import Filter from "./pages/Filter";
+import RouteMap from "./components/RouteMap";
 
 axios.defaults.withCredentials = true;
 
@@ -40,6 +41,9 @@ function App() {
         </Route>
         <Route path="/filter">
           {loggedIn === true ? <Filter /> : <Redirect to="/login"></Redirect>}
+        </Route>
+        <Route path="/routemap">
+          {loggedIn === true ? <RouteMap /> : <Redirect to="/"></Redirect>}
         </Route>
       </>
     </Router>

@@ -6,6 +6,7 @@ const AuthContext = createContext();
 function AuthContextProvider(props) {
   const [loggedIn, setLoggedIn] = useState(undefined);
   const [userID, setUserID] = useState("");
+  const [routeMap, setRouteMap] = useState({ id: "asd" });
   const [notes, setNotes] = useState([
     {
       Pid: "",
@@ -58,6 +59,8 @@ function AuthContextProvider(props) {
         setUserInfo,
         notes,
         setNotes,
+        routeMap,
+        setRouteMap,
       }}
     >
       {props.children}
