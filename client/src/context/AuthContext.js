@@ -6,7 +6,8 @@ const AuthContext = createContext();
 function AuthContextProvider(props) {
   const [loggedIn, setLoggedIn] = useState(undefined);
   const [userID, setUserID] = useState("");
-  const [routeMap, setRouteMap] = useState({ id: "asd" });
+  const [routeMap, setRouteMap] = useState({});
+  const [currentLocation, setCurrentLocation] = useState();
   const [notes, setNotes] = useState([
     {
       Pid: "",
@@ -47,6 +48,9 @@ function AuthContextProvider(props) {
   }
   useEffect(() => {
     getLoggedIn();
+    navigator.geolocation.getCurrentPosition((position) => {
+      setCurrentLocation([position.coords.latitude, position.coords.longitude]);
+    });
   }, []);
   return (
     <AuthContext.Provider
@@ -61,6 +65,8 @@ function AuthContextProvider(props) {
         setNotes,
         routeMap,
         setRouteMap,
+        currentLocation,
+        setCurrentLocation,
       }}
     >
       {props.children}

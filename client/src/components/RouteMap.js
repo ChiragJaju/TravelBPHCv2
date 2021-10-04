@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AuthContext from "../context/AuthContext";
 import Copyright from "./Copyright";
+import { Redirect, Link } from "react-router-dom";
 import Navbar from "../pages/Navbar";
 import L from "leaflet";
 import "./RouteMap.css";
@@ -66,55 +67,53 @@ const RouteMap = (props) => {
     }).addTo(map);
 
     if (startRouting) {
-      map
-        .locate({
-          setView: true,
-          watch: true,
-        }) /* This will return map so you can do chaining */
-        .on("locationfound", function (e) {
-          var marker = L.marker([e.latitude, e.longitude]).bindPopup(
-            "Your are here :)"
-          );
-          var circle = L.circle([e.latitude, e.longitude], e.accuracy / 2, {
-            weight: 1,
-            color: "blue",
-            fillColor: "#cacaca",
-            fillOpacity: 0.1,
-          });
-          map.addLayer(marker);
-          map.addLayer(circle);
-          setTimeout(() => {
-            map.removeLayer(circle);
-            map.removeLayer(marker);
-          }, 500);
-        })
-        .on("locationerror", function (e) {
-          console.log(e);
-          alert("Location access denied.");
-        });
+      // map
+      //   .locate({
+      //     setView: true,
+      //     watch: true,
+      //   }) /* This will return map so you can do chaining */
+      //   .on("locationfound", function (e) {
+      //     var marker = L.marker([e.latitude, e.longitude]).bindPopup(
+      //       "Your are here :)"
+      //     );
+      //     var circle = L.circle([e.latitude, e.longitude], e.accuracy / 2, {
+      //       weight: 1,
+      //       color: "blue",
+      //       fillColor: "#cacaca",
+      //       fillOpacity: 0.1,
+      //     });
+      //     map.addLayer(marker);
+      //     map.addLayer(circle);
+      //     setTimeout(() => {
+      //       map.removeLayer(circle);
+      //       map.removeLayer(marker);
+      //     }, 500);
+      //   })
+      //   .on("locationerror", function (e) {
+      //     console.log(e);
+      //     alert("Location access denied.");
+      //   });
     }
   }, [Acoor, Dcoor, startRouting]);
   //  /map routing try
   const handleSubmit = () => {
     setStartRouting(true);
-    navigator.geolocation.getCurrentPosition((position) => {
-      Acoor = [position.coords.longitude, position.coords.latitude];
-    });
   };
 
-  const handleSubmitStop = () => {
-    setStartRouting(false);
-  };
   return (
     <>
+      {startRouting && (
+        <Redirect
+          to={{
+            pathname: "/liveroute",
+          }}
+        />
+      )}
       <Navbar />
       <div class="right-sidebar-container">
         {true && <div id="map"></div>}
         <div className={classes.routingButton}>
           <PinkButton handleSubmit={handleSubmit}>Start Routing</PinkButton>
-        </div>
-        <div className={classes.routingButton}>
-          <PinkButton handleSubmit={handleSubmitStop}>Stop Routing</PinkButton>
         </div>
         <Copyright />
       </div>

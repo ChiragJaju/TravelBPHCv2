@@ -10,6 +10,7 @@ import YourPosts from "./pages/YourPosts";
 import Navbar from "./pages/Navbar";
 import Filter from "./pages/Filter";
 import RouteMap from "./components/RouteMap";
+import LiveRoute from "./pages/LiveRouting";
 
 axios.defaults.withCredentials = true;
 
@@ -44,6 +45,9 @@ function App() {
         </Route>
         <Route path="/routemap">
           {loggedIn === true ? <RouteMap /> : <Redirect to="/"></Redirect>}
+        </Route>
+        <Route path="/liveroute">
+          {loggedIn === true ? <LiveRoute /> : <Redirect to="/"></Redirect>}
         </Route>
       </>
     </Router>
