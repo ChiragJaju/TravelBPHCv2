@@ -83,13 +83,10 @@ const RouteMap = (props) => {
           });
           map.addLayer(marker);
           map.addLayer(circle);
-
-          L.Routing.control({
-            waypoints: [
-              L.latLng(e.longitude, e.latitude),
-              L.latLng(Dcoor[1], Dcoor[0]),
-            ],
-          });
+          setTimeout(() => {
+            map.removeLayer(circle);
+            map.removeLayer(marker);
+          }, 500);
         })
         .on("locationerror", function (e) {
           console.log(e);
