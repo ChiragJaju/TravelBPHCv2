@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+
 import AuthContext from "../context/AuthContext";
 import Copyright from "../components/Copyright";
 import Navbar from "./Navbar";
@@ -7,22 +7,13 @@ import L from "leaflet";
 import "./LiveRouting.css";
 import "leaflet/dist/leaflet.css";
 require("leaflet-routing-machine");
-const useStyles = makeStyles((theme) => ({
-  routingButton: {
-    marginLeft: "10%",
-    marginTop: "20px",
-  },
-  routingButtonStop: {},
-}));
 
 const RouteMap = (props) => {
-  const classes = useStyles();
   const { routeMap, currentLocation } = useContext(AuthContext);
   let Acoor = routeMap.ArrivalLocation.coordinates;
   const Dcoor = routeMap.DestinationLocation.coordinates;
-  const [startRouting, setStartRouting] = useState(false);
+
   function initializingMap(props) {
-    // call this method before you initialize your map.
     var container = L.DomUtil.get("map");
     if (container != null) {
       container._leaflet_id = null;
@@ -31,7 +22,7 @@ const RouteMap = (props) => {
 
   useEffect(() => {
     initializingMap();
-
+    // console.log(currentLocation);
     let map = L.map("map", {
       center: [(Acoor[0] + Dcoor[0]) / 2, (Acoor[1] + Dcoor[1]) / 2],
       zoom: 13,
@@ -70,17 +61,17 @@ const RouteMap = (props) => {
         });
         map.addLayer(marker);
         map.addLayer(circle);
-
+        // console.log("x");
         setTimeout(() => {
           map.removeLayer(circle);
           map.removeLayer(marker);
-        }, 500);
+        }, 1000);
       })
       .on("locationerror", function (e) {
         console.log(e);
         alert("Location access denied.");
       });
-  }, [Acoor, Dcoor, startRouting]);
+  }, [Acoor, Dcoor, currentLocation]);
   //  /map routing try
 
   return (

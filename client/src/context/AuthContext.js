@@ -48,9 +48,6 @@ function AuthContextProvider(props) {
   }
   useEffect(() => {
     getLoggedIn();
-    navigator.geolocation.getCurrentPosition((position) => {
-      setCurrentLocation([position.coords.latitude, position.coords.longitude]);
-    });
   }, []);
   return (
     <AuthContext.Provider

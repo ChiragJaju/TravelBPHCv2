@@ -10,3 +10,6 @@
   z-index: 0;
   margin-bottom: 500px;
 }
+.leaflet-control-container .leaflet-routing-container {
+  display: none;
+}

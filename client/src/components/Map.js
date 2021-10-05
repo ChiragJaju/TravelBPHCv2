@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./map.css";
 import L from "leaflet";
+import AuthContext from "../context/AuthContext";
 
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import DraggableMarker from "./DraggableMarker";
 require("leaflet-routing-machine");
 function Map(props) {
-  const center = {
-    lat: 17.237332384,
-    lng: 78.423498306,
-  };
-  const [isAdded, setIsAdded] = useState(false);
+  const { setCurrentLocation } = useContext(AuthContext);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setCurrentLocation([position.coords.latitude, position.coords.longitude]);
+    });
+  }, [setCurrentLocation]);
 
   return (
     <MapContainer
