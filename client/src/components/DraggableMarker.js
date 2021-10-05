@@ -1,5 +1,5 @@
-import { useState, useRef, useMemo, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useRef, useMemo, useCallback } from "react";
+import { Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -27,7 +27,7 @@ function DraggableMarker(props) {
         }
       },
     }),
-    []
+    [props]
   );
   const toggleDraggable = useCallback(() => {
     props.setDraggable((d) => {
@@ -36,7 +36,7 @@ function DraggableMarker(props) {
       }
       return !d;
     });
-  }, []);
+  }, [props]);
 
   return (
     <Marker

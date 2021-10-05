@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import Modal from "../UI/Modal";
 
 import { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ export default function Popup(props) {
   let postsWithDetails = [];
 
   props.allPosts.map((Apost) => {
-    let requiredPost = props.notes.filter((post) => {
+    props.notes.filter((post) => {
       if (post._id === Apost.postId) {
         postsWithDetails.push({
           posts: post,

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import {
   Card,
   Grid,
@@ -49,7 +49,7 @@ export default function CustomCard(props) {
   const classes = useStyles();
   const [isReqSent, setIsReqSent] = useState(undefined);
   const [carStrength, setCarStrength] = useState("");
-  const { userInfo, routeMap, setRouteMap } = useContext(AuthContext);
+  const { userInfo, setRouteMap } = useContext(AuthContext);
 
   const [isRequestValid, setIsRequestValid] = useState(undefined);
   const handleCarChange = (event) => {
@@ -277,12 +277,6 @@ export default function CustomCard(props) {
                   {"Maximum only 4 people allowed in the Car"}
                 </Typography>
               )}
-
-              {/* {isReqSent === false && (
-              <Typography variant="h6" className={classes.textFalse}>
-                {"Request was already sent."}
-              </Typography>
-            )} */}
             </Grid>
           </Card>
         </Box>

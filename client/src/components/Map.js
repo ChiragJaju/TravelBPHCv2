@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import "./map.css";
-import L from "leaflet";
+
 import AuthContext from "../context/AuthContext";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import DraggableMarker from "./DraggableMarker";
 require("leaflet-routing-machine");
 function Map(props) {
@@ -26,11 +26,7 @@ function Map(props) {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker> */}
+
       <DraggableMarker //For arrival
         coordinates={props.arrivalCoordinates}
         setCoordinates={props.setArrivalCoordinates}

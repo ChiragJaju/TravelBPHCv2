@@ -137,23 +137,9 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             OR
           </Typography>
-          {/* <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.googleLogin}
-          > */}
-          {/* <Link
-            href="localhost:3000/auth/google"
-            style={{ textDecoration: "none", color: "#f0f0f0" }}
-          > */}
-
           <a href="https://travel-bphc-v2.herokuapp.com/auth/google">
             {"Login with "} &nbsp;<i with i class="fab fa-google"></i>
           </a>
-          {/* </Link> */}
-          {/* </Button> */}
         </div>
       </Container>
       <Copyright />

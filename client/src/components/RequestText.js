@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography } from "@material-ui/core";
 // import AuthContext from "../context/AuthContext";
 import axios from "axios";
@@ -17,8 +17,6 @@ export default function RequestText(props) {
   const [responseAccept, setResponseAccept] = useState(undefined);
   const [responseReject, setResponseReject] = useState(undefined);
 
-  // const [currentResponse, setCurrentResponse] = useState(undefined);
-  // const { userID, notes, setNotes } = useContext(AuthContext);
   const currentReq = props.postDetails.Preq.filter((req) => {
     if (req.email === props.req.email) return true;
     else return false;
@@ -45,14 +43,6 @@ export default function RequestText(props) {
     setResponseReject(isResponseReject.data);
     // console.log(props.postDetails);
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await axios.get("/api/posts");
-  //     setNotes(response.data);
-  //   };
-  //   fetchData();
-  // }, [setNotes, responseAccept, responseReject]);
-  // console.log(props.req);
   return (
     <>
       <Box
@@ -100,16 +90,6 @@ export default function RequestText(props) {
               </Button>
             </>
           )}
-        {/* {props.current && responseAccept && (
-          <Typography variant="h6" className={classes.text}>
-            {"Request Accepted"}
-          </Typography>
-        )}
-        {props.current && responseReject && (
-          <Typography variant="h6" className={classes.textFalse}>
-            {"Request Rejected"}
-          </Typography>
-        )} */}
       </Box>
     </>
   );

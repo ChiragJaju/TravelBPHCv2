@@ -70,17 +70,9 @@ async function isLoggedIn(req, res, next) {
 }
 
 mongoose.connect(process.env.MDB_CONNECT);
-// mongoose.connect("mongodb://localhost:27017");
+// mongoose.connect("mongodb://localhost:27017"); //Clusters fail to connect on BITS wifi
 
 app.use("/api", require("./routes/dummyRoutes"));
-
-// app.use(express.static(path.join(__dirname, "client", "build")));
-// app.get("/*", function (req, res) {
-//   const pathToIndex = path.join(__dirname, "client", "build", "index.html");
-//   const raw = fs.readFileSync(pathToIndex);
-//   console.log(raw);
-//   res.send(raw);
-// });
 
 app.get(
   "/auth/google",

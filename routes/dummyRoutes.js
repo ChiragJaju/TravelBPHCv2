@@ -292,24 +292,6 @@ router.post("/postRequest/:response/:email/:carStrength", async (req, res) => {
   }
 });
 
-// router.get("/filterDate/:date/:month/:year", async (req, res) => {
-//   try {
-//     const date = parseInt(req.params.date);
-//     const month = parseInt(req.params.month) + 1;
-//     const year = parseInt(req.params.year);
-//     const response = await posts.find({
-//       "PdateAndTime.date": date,
-//       "PdateAndTime.month": month,
-//       "PdateAndTime.year": year,
-//     });
-
-//     res.send(response);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send(false);
-//   }
-// }); /// TODO
-
 router.post("/filter", async (req, res) => {
   try {
     const d = req.body;
@@ -344,17 +326,7 @@ router.post("/filter", async (req, res) => {
         },
       });
     }
-    // const response = await posts.find({
-    //   ArrivalLocation: {
-    //     $near: {
-    //       $geometry: {
-    //         type: "Point",
-    //         coordinates: [d.arrivalCoordinates.lng, d.arrivalCoordinates.lat],
-    //       },
-    //       $maxDistance: 2000, //In metres
-    //     },
-    //   },
-    // });
+
     if (d.dateData !== undefined) {
       const date = dateData.getDate();
       const month = dateData.getMonth() + 1;

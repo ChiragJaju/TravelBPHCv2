@@ -10,9 +10,11 @@ import {
   Select,
   FormHelperText,
   InputLabel,
+  Typography,
+  TextField,
+  Checkbox,
 } from "@material-ui/core";
 import "date-fns";
-import { Typography, TextField, Checkbox } from "@material-ui/core";
 import AuthContext from "../context/AuthContext";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -158,38 +160,7 @@ export default function Filter() {
   const firstDateIsPastDayComparedToSecond = (firstDate, secondDate) =>
     firstDate.setHours(0, 0, 0, 0) - secondDate.setHours(0, 0, 0, 0) < 0;
 
-  // const handlePlaceSubmit = () => {
-  //   let filteredPosts = notes.filter((post) => {
-  //     if (post.Parrival === arrival && post.Pdestination === destination) {
-  //       const currentDate = new Date();
-  //       const goodDate = new Date(post.PdateAndTime.data);
-  //       if (goodDate.getTime() - currentDate.getTime() >= 0) return true;
-  //       else return false;
-  //     } else return false;
-  //   });
-
-  //   setPostsToShow(filteredPosts);
-  // };
   const handleDateSubmit = async () => {
-    // const response = await notes.filter((post) => {
-    //   const goodDate = new Date(post.PdateAndTime.data);
-    //   if (
-    //     Math.abs(
-    //       goodDate.setHours(0, 0, 0, 0) - selectedDate.setHours(0, 0, 0, 0)
-    //     ) <= 0
-    //   )
-    //     return true;
-    //   else return false;
-    // });
-    // const apiResponse = await axios.get(
-    //   "/api/filterDate/" +
-    //     selectedDate.getDate() +
-    //     "/" +
-    //     selectedDate.getMonth() +
-    //     "/" +
-    //     selectedDate.getFullYear()
-    // );
-
     let sendData = {};
     if (nameCheckbox) {
       if (name === undefined || name.trim() === "") {
@@ -332,11 +303,6 @@ export default function Filter() {
                     onChange={handleNameChange}
                   />
                 </Grid>
-                {/* <Grid item xs={4}>
-                  <PinkButton handleSubmit={handlePlaceSubmit}>
-                    By Place
-                  </PinkButton>
-                </Grid> */}
 
                 <Grid item xs={3}>
                   <Checkbox
