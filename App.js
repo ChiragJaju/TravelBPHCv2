@@ -69,8 +69,8 @@ async function isLoggedIn(req, res, next) {
   } else res.send("Please login with BITSmail only");
 }
 
-// mongoose.connect(process.env.MDB_CONNECT);
-mongoose.connect("mongodb://localhost:27017");
+mongoose.connect(process.env.MDB_CONNECT);
+// mongoose.connect("mongodb://localhost:27017");
 
 app.use("/api", require("./routes/dummyRoutes"));
 
